@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Carlos Ospina",
+    "email": "carlos@company.org",
+    "role": "admin"
+  },
+  {
+    "name": "Mauricio Soche",
+    "email": "mauricioso@company.org",
+    "role": "admin"
+  },
+  {
+    "name": "Daniel Valencia",
+    "email": "daniel@company.org",
+    "role": "agent"
+  },
+  {
+    "name": "Mauricio Giraldo",
+    "email": "mauriciogi@company.org",
+    "role": "end-user"
+  },
+  {
+    "name": "Andrés Calle",
+    "email": "andrescal@company.org",
+    "role": "agent"
+  },
+  {
+    "name": "Pablo Páez",
+    "email": "pablo@company.org",
+    "role": "end-user"
+  },
+  {
+    "name": "Sofía Hurtado",
+    "email": "sofia@company.org",
+    "role": "agent"
+  },
+  {
+    "name": "Eliécer Bueno",
+    "email": "eliecer@company.org",
+    "role": "end-user"
+  },
+  {
+    "name": "Andrés Castaño",
+    "email": "andrescas@company.org",
+    "role": "end-user"
+  },
+  {
+    "name": "Mariana Marín",
+    "email": "mariana@company.org",
+    "role": "agent"
+  },
+  {
+    "name": "Lucía Flórez",
+    "email": "lucia@company.org",
+    "role": "end-user"
+  },
+  {
+    "name": "Pedro Piraquive",
+    "email": "pedro@company.org",
+    "role": "end-user"
+  },
+  {
+    "name": "Paco Pataquiva",
+    "email": "paco@company.org",
+    "role": "admin"
+  }
+]
