@@ -6,7 +6,9 @@ from user_queries import UserQueries
 
 def main():
     with open('scripts/test-users.json', 'r') as f:
-        for user in json.loads(f.read()):
+        users = json.loads(f.read())
+        for i, user in enumerate(users):
+            print(f'Record {i + 1} of {len(users)}')
             UserQueries.register(user)
         print('Done.')
 
