@@ -1,6 +1,5 @@
 import json
 
-from base_query import auth_token
 from user_queries import UserQueries
 
 
