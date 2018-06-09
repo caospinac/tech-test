@@ -14,6 +14,7 @@ class TicketQueries(object):
                     'created_at': ticket['created_at'],
                     'updated_at': ticket['updated_at'],
                     'requester_id': ticket['requester_id'],
+                    'assignee_id': ticket['assignee_id'],
                     'status': ticket['status'],
                     'priority': ticket['priority'],
                     'subject': ticket['subject'],
