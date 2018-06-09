@@ -3,10 +3,12 @@ import json
 from zenpy import Zenpy
 from zenpy.lib.api_objects import User
 
+from base_query import auth_token
+
 
 creds = {
     'email' : 'carlosaospinac@gmail.com',
-    'token' : 'N7B56ZzmoUihImCI20eNfmkM57g9HRyxOQhf9Wxw',
+    'token' : auth_token,
     'subdomain': 'team3000'
 }
 
