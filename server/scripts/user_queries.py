@@ -2,13 +2,15 @@ import json
 
 from base_query import get_request, post_request
 
+
 class UserQueries(object):
 
     @staticmethod
-    def request_all():
+    def request_all(query=''):
         page = 1
         while True:
-            query = get_request('/api/v2/users.json?page=%d' % page)
+            query = get_request(f'/api/v2/users/search.json'
+                                f'?page={page}&query={query}')
             for user in query['users']:
                 if user['role'] == 'end-user':
                     continue
@@ -27,10 +29,11 @@ class UserQueries(object):
             page += 1
     
     @staticmethod
-    def request_fields(*which):
+    def request_fields(*which, query=''):
         page = 1
         while True:
-            query = get_request('/api/v2/users.json?page=%d' % page)
+            query = get_request(f'/api/v2/users/search.json'
+                                f'?page={page}&query={query}')
             for user in query['users']:
                 yield { field: user[field] for field in which }
             if not query['next_page']:
@@ -41,3 +44,10 @@ class UserQueries(object):
     def register(new):
         payload = json.dumps({'user': new})
         return post_request('/api/v2/users.json', payload)
+
+
+def main():
+    print(list(UserQueries.request_all()))
+
+if __name__ == '__main__':
+    main()
