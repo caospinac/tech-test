@@ -13,11 +13,12 @@ class UserQueries(object):
                 if user['role'] == 'end-user':
                     continue
                 yield {
+                    'created_at': user['created_at'],
+                    'updated_at': user['updated_at'],
                     'integration_id': user['id'],
                     'first_name': ' '.join(user['name'].split()[:-1]),
                     'last_name': user['name'].split()[-1],
                     'email': user['email'],
-                    'created_at': user['created_at'],
                     'role': user['role'],
                 }
             if not query['next_page']:
