@@ -13,6 +13,7 @@ class UserQueries(object):
                 if user['role'] == 'end-user':
                     continue
                 yield {
+                    'id': user['id'],
                     'created_at': user['created_at'],
                     'updated_at': user['updated_at'],
                     'integration_id': user['id'],
@@ -24,9 +25,19 @@ class UserQueries(object):
             if not query['next_page']:
                 break
             page += 1
+    
+    @staticmethod
+    def request_fields(*which):
+        page = 1
+        while True:
+            query = get_request('/api/v2/users.json?page=%d' % page)
+            for user in query['users']:
+                yield { field: user[field] for field in which }
+            if not query['next_page']:
+                break
+            page += 1
 
     @staticmethod
     def register(new):
         payload = json.dumps({'user': new})
         return post_request('/api/v2/users.json', payload)
-
