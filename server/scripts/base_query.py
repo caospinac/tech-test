@@ -2,14 +2,16 @@ import json
 
 import requests as req
 
+try:
+    from .creds import email, auth_token
+except ImportError as ie:
+    from creds import email, auth_token
 
 
-auth_token = 'N7B56ZzmoUihImCI20eNfmkM57g9HRyxOQhf9Wxw'
 api_url_base = 'https://team3000.zendesk.com'
 
 headers = {'Content-Type': 'application/json'}
-auth = ('carlosaospinac@gmail.com/token',
-        'N7B56ZzmoUihImCI20eNfmkM57g9HRyxOQhf9Wxw')
+auth = (f'{email}/token', auth_token)
 
 def get_request(endpoint):
     url = f'{ api_url_base }{ endpoint }'
