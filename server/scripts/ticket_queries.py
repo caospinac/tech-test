@@ -1,16 +1,19 @@
 import json
 
-from base_query import get_request, post_request
+try:
+    from .base_query import get_request, post_request
+except ImportError as ie:
+    from base_query import get_request, post_request
 
 
 class TicketQueries(object):
 
     @staticmethod
-    def request_all(query=''):
+    def request_all(args_query=''):
         page = 1
         while True:
             query = get_request(f'/api/v2/search.json'
-                                f'?page={page}&query=type:ticket%20{query}')
+                                f'?page={page}&query=type:ticket%20{args_query}')
             for ticket in query['results']:
                 yield {
                     'created_at': ticket['created_at'],
@@ -30,11 +33,11 @@ class TicketQueries(object):
             page += 1
 
     @staticmethod
-    def request_fields(*which, query=''):
+    def request_fields(*which, args_query=''):
         page = 1
         while True:
             query = get_request(f'/api/v2/search.json'
-                                f'?page={page}&query=type:ticket%20{query}')
+                                f'?page={page}&query=type:ticket%20{args_query}')
             for ticket in query['results']:
                 yield { field: ticket[field] for field in which }
             if not query['next_page']:

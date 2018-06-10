@@ -1,16 +1,18 @@
 import json
 
-from base_query import get_request, post_request
-
+try:
+    from .base_query import get_request, post_request
+except ImportError as ie:
+    from base_query import get_request, post_request
 
 class UserQueries(object):
 
     @staticmethod
-    def request_all(query=''):
+    def request_all(args_query=''):
         page = 1
         while True:
             query = get_request(f'/api/v2/users/search.json'
-                                f'?page={page}&query={query}')
+                                f'?page={page}&query={args_query}')
             for user in query['users']:
                 if user['role'] == 'end-user':
                     continue
@@ -29,11 +31,11 @@ class UserQueries(object):
             page += 1
     
     @staticmethod
-    def request_fields(*which, query=''):
+    def request_fields(*which, args_query=''):
         page = 1
         while True:
             query = get_request(f'/api/v2/users/search.json'
-                                f'?page={page}&query={query}')
+                                f'?page={page}&query={args_query}')
             for user in query['users']:
                 yield { field: user[field] for field in which }
             if not query['next_page']:
