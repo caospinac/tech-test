@@ -17,7 +17,7 @@ class UserQueries(object):
                 if user['role'] == 'end-user':
                     continue
                 yield {
-                    'id': user['id'],
+                    '_id': user['id'],
                     'created_at': user['created_at'],
                     'updated_at': user['updated_at'],
                     'integration_id': user['id'],
