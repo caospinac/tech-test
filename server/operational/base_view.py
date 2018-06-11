@@ -1,13 +1,16 @@
+import os
 from http import HTTPStatus
 
+from pymongo import MongoClient
 from sanic.views import HTTPMethodView
 from sanic.response import json
 
 
 class BaseView(HTTPMethodView):
 
-    def __init__(self, db_engine):
-        self.db_engine = db_engine
+    def __init__(self):
+        client = MongoClient(os.getenv('DB_HOST'), 27017)
+        self.database = client.zendesk
 
     @staticmethod
     def response_status(code, data=None):
