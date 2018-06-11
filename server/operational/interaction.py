@@ -5,8 +5,8 @@ from sanic.response import json
 
 from .base_view import BaseView
 
-class User(BaseView):
+class Interaction(BaseView):
 
     def __init__(self):
         super().__init__()
-        self.collection = self.database.users
+        self.collection = self.database.interactions

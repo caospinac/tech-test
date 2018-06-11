@@ -11,6 +11,7 @@ class BaseView(HTTPMethodView):
     def __init__(self):
         client = MongoClient(os.getenv('DB_HOST'), 27017)
         self.database = client.zendesk
+        self.collection = None
 
     @staticmethod
     def response_status(code, data=None):
@@ -24,7 +25,6 @@ class BaseView(HTTPMethodView):
             }, status=status.value)
         except Exception as e:
             raise e
-            # return json({})
 
     @staticmethod
     def not_null_data(**kw):
@@ -34,17 +34,25 @@ class BaseView(HTTPMethodView):
             if v
         )
 
-    async def post(self, request, arg=None):
+    def post(self, request, arg=None):
         return self.response_status(501)
 
-    async def get(self, request, arg=None):
+    def get(self, request, id=None):
+        if not id:
+            return self.response_status(
+                200, self.collection.find()
+            )
+        res = self.collection.find_one({'_id': id})
+        return self.response_status(200 if res else 404, res)
+
+    def put(self, request, arg=None):
         return self.response_status(501)
 
-    async def put(self, request, arg=None):
+    def patch(self, request, arg=None):
         return self.response_status(501)
 
-    async def patch(self, request, arg=None):
+    def delete(self, request, arg=None):
         return self.response_status(501)
-
-    async def delete(self, request, arg=None):
-        return self.response_status(501)
+    
+    def options(self, request, arg=None):
+        return json({})

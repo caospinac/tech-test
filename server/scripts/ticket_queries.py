@@ -16,6 +16,7 @@ class TicketQueries(object):
                                 f'?page={page}&query=type:ticket%20{args_query}')
             for ticket in query['results']:
                 yield {
+                    '_id': ticket['id'],
                     'created_at': ticket['created_at'],
                     'updated_at': ticket['updated_at'],
                     'requester_id': ticket['requester_id'],

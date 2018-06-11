@@ -1,20 +1,20 @@
 from sanic import Sanic
 from sanic.exceptions import NotFound, FileNotFound
-from sanic.response import html, redirect
+from sanic.response import json, redirect
 # from sanic_cors import CORS
 
-from operational import User
+from operational import BaseView, Interaction, User
 
 app = Sanic(__name__)
 
 
 @app.exception(NotFound, FileNotFound)
 def ignore_404s(request, exception):
-    return BaseController.response_status(404)
+    return BaseView.response_status(404)
 
 
 @app.middleware('response')
-async def cors_headers(request, response):
+def cors_headers(request, response):
     cors_headers = {
         'access-control-allow-origin': '*',
         'access-control-allow-headers': 'Accept, Content-Type',
@@ -27,12 +27,15 @@ async def cors_headers(request, response):
     return response
 
 @app.route("/", methods=['GET', 'POST'])
-async def index(request):
+def index(request):
     return json({'hello': 'hello'})
 
 
-app.add_route(User.as_view(), '/api/user')
-app.add_route(User.as_view(), '/api/user/<id>')
+app.add_route(User.as_view(), '/api/users')
+app.add_route(User.as_view(), '/api/user/<id:int>')
+
+app.add_route(Interaction.as_view(), '/api/interactions')
+app.add_route(Interaction.as_view(), '/api/interaction/<id:int>')
 
 
 if __name__ == '__main__':
