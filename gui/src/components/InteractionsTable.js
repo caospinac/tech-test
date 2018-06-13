@@ -11,7 +11,33 @@ class InteractionsTable extends Component {
     }
   }
 
+  myFilter = (data, args) => {
+    var new_d = [];
+    // eslint-disable-next-line
+    data.map((item) => {
+      var c = 0;
+      for (const key in args) {
+        if (item[key] === args[key] || ('integration_id' === key && item.user[key] === args[key])) {
+          ++c;
+        }
+      }
+      if (c === Object.keys(args).length) {
+        new_d.push(item);
+      }
+    });
+    return new_d;
+  }
+
+  removeFalsy = (dict) => {
+    let newDict = {};
+    Object.keys(dict).forEach((prop) => {
+      if (dict[prop]) { newDict[prop] = dict[prop]; }
+    });
+    return newDict;
+  };
+
   componentWillReceiveProps = (props) => {
+
     const { interactions, filters } = props
     var view = []
     if (filters.searchById) {
@@ -20,7 +46,15 @@ class InteractionsTable extends Component {
       });
       if (found) view.push(found)
     } else {
-      interactions.map((x) => view.push(x));
+      let newFilters = this.removeFalsy({
+        integration_id: filters.selectUsers,
+        status: filters.status,
+        priority: filters.priority,
+        type: filters.type
+      });
+      console.log(interactions)
+      console.log(newFilters)
+      view = this.myFilter(interactions, newFilters);
     }
 
     this.setState({
@@ -32,7 +66,6 @@ class InteractionsTable extends Component {
 
   render() {
     const { view } = this.state;
-    console.log(view)
     if (!view.length) {
       return (
         <Alert color="info">

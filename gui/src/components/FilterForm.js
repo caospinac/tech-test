@@ -54,7 +54,7 @@ class FilterForm extends Component {
 
   selectUsersOnChangeHandler = (e) => {
     this.setState({
-      filterSelectUsers: e.target.value
+      filterSelectUsers: Number(e.target.value)
     });
   }
 
@@ -72,21 +72,20 @@ class FilterForm extends Component {
 
   selectStatusOnChangeHandler = (e) => {
     this.setState({
-      filterStatus: e.target.value
+      filterStatus: Number(e.target.value) + 1 ? null : e.target.value
     });
   }
 
   selectPriorityOnChangeHandler = (e) => {
     this.setState({
-      filterPriority: e.target.value
+      filterPriority: Number(e.target.value) + 1 ? null : e.target.value
     });
   }
 
   selectTypeOnChangeHandler = (e) => {
     this.setState({
-      filterType: e.target.value
+      filterType: Number(e.target.value) + 1 ? null : e.target.value
     });
-    console.log(e.target.value)
   }
 
   render() {
