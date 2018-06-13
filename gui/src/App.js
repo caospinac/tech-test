@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import request from 'superagent';
+import { Alert, Container } from 'reactstrap';
+
 
 import Header from './components/Header'
 import FilterForm from './components/FilterForm'
@@ -9,13 +12,63 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      message: false,
       users: [],
       interactions: [],
+      newData: {
+        users: 0,
+        interactions: 0
+      }
     }
   }
 
-  componentDidMount = () => {
-    var users, interactions;
+  checkUpdates = () => {
+    request.get('http://localhost:8000/api/news')
+    .set('Accept', 'application/json')
+    .then(res => {
+      this.setState({
+        newData: res.body.data
+      })
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
+
+  showMessage = (body, color) => {
+    let el = document.getElementById('message');
+    ReactDOM.render(
+      <Container><Alert color={color} toggle={() => {
+        while (el.firstChild) {
+          el.removeChild(el.firstChild);
+        }      
+      }}>
+      {body}
+    </Alert></Container>,
+    el
+    );
+  }
+
+  updateData = () => {
+    request.post('http://localhost:8000/api/news/update')
+    .set('Accept', 'application/json')
+    .then(() => {
+      console.log('updating(?)')
+      this.getData();
+      this.showMessage('Successful data update!', 'success')
+      this.setState({newData: {
+        users: 0,
+        interactions: 0
+      }})
+    })
+    .catch(err => {
+      console.log(err);
+      this.showMessage('It seems that it could not be updated :S', 'danger')
+    });
+  }
+
+  getData = () => {
+    let users = [], interactions;
     request.get('http://localhost:8000/api/users')
     .set('Accept', 'application/json')
     .then(res => {
@@ -30,10 +83,14 @@ class App extends Component {
       interactions = []
       // eslint-disable-next-line
       res.body.data.map((x) => {
-        var user = users.find((item) => {
+        let user = users.find((item) => {
           return item.integration_id === x.assignee_id
         });
-        interactions.push(Object.assign({}, x, {user: user}));
+        interactions.push(Object.assign({}, x, {
+          userFirstName: user.first_name,
+          userLastName: user.last_name,
+          userIntegrationId: user.integration_id,
+        }));
       });
       this.setState({
         users: users,
@@ -45,12 +102,28 @@ class App extends Component {
     });
   }
 
+  messageOnDismiss = () => {
+    this.setState({ message: false });
+  }
+
+  componentDidMount = () => {
+    this.checkUpdates()
+    try {
+      // setInterval(this.checkUpdates, 60000);
+    } catch(e) {
+      console.log(e);
+    }
+    this.getData();    
+  }
+
   render() {
-    const { users, interactions } = this.state;
+    const { users, interactions, newData } = this.state;
     return (
       <div>
-        <Header />
-        <FilterForm users={users} interactions={interactions} />
+        <Header newData={newData} updateData={this.updateData} />
+        <div id="message"></div>
+        <FilterForm users={users} interactions={interactions}
+          />
       </div>
     );
   }

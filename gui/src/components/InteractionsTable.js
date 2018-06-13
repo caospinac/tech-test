@@ -12,12 +12,12 @@ class InteractionsTable extends Component {
   }
 
   myFilter = (data, args) => {
-    var new_d = [];
+    let new_d = [];
     // eslint-disable-next-line
     data.map((item) => {
-      var c = 0;
+      let c = 0;
       for (const key in args) {
-        if (item[key] === args[key] || ('integration_id' === key && item.user[key] === args[key])) {
+        if (item[key] === args[key]) {
           ++c;
         }
       }
@@ -39,22 +39,42 @@ class InteractionsTable extends Component {
   componentWillReceiveProps = (props) => {
 
     const { interactions, filters } = props
-    var view = []
+    let view = []
     if (filters.searchById) {
-      var found = interactions.find((item) => {
+      let found = interactions.find((item) => {
         return String(item._id) === filters.interactionId
       });
       if (found) view.push(found)
     } else {
       let newFilters = this.removeFalsy({
-        integration_id: filters.selectUsers,
+        userIntegrationId: filters.selectUsers,
         status: filters.status,
         priority: filters.priority,
         type: filters.type
       });
-      console.log(interactions)
-      console.log(newFilters)
-      view = this.myFilter(interactions, newFilters);
+      if (filters.minDate) {
+        let preView = []
+        // eslint-disable-next-line
+        this.myFilter(interactions, newFilters).map((x) =>{
+          if (x.created_at >= filters.minDate) preView.push(x)
+        })
+        if (filters.maxDate) {
+          // eslint-disable-next-line
+          preView.map((x) => {
+            if (x.created_at.slice(0, 10) <= filters.maxDate) view.push(x)
+          })
+        } else {
+          // eslint-disable-next-line
+          preView.map((x) => {
+            if (x.created_at.slice(0, 10) === filters.minDate) view.push(x)
+          })
+        }
+      } else if (filters.maxDate) {
+        // eslint-disable-next-line
+        this.myFilter(interactions, newFilters).map((x) =>{
+          if (x.created_at.slice(0, 10) <= filters.maxDate) view.push(x)
+        })
+      } else view = this.myFilter(interactions, newFilters);
     }
 
     this.setState({
@@ -74,7 +94,7 @@ class InteractionsTable extends Component {
       )
     }
     return (
-      <Table responsive>
+      <Table striped responsive>
         <thead>
           <tr>
             <th>Date</th>
@@ -96,8 +116,8 @@ class InteractionsTable extends Component {
                   <td>{x.status}</td>
                   <td>{x.priority}</td>
                   <td>{x.type}</td>
-                  <td>{x.user.first_name} {x.user.last_name}</td>
-                  <td>{x.user.integration_id}</td>
+                  <td>{x.userFirstName.concat(" ", x.userLastName)}</td>
+                  <td>{x.userIntegrationId}</td>
                 </tr>
               )
             })

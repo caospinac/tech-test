@@ -16,8 +16,8 @@ class FilterForm extends Component {
       filterSearchById: false,
       filterInteractionId: null,
       filterSelectUsers: null,
-      filterMinDate: null,
-      filterMaxDate: null,
+      filterMinDate: '',
+      filterMaxDate: '',
       filterStatus: null,
       filterPriority: null,
       filterType: null
@@ -59,14 +59,18 @@ class FilterForm extends Component {
   }
 
   minDateOnChangeHandler = (e) => {
+    const { filterMaxDate } = this.state;
     this.setState({
-      filterMinDate: e.target.value
+      filterMinDate: e.target.value,
+      filterMaxDate: e.target.value > filterMaxDate ? e.target.value : filterMaxDate
     });
   }
 
   maxDateOnChangeHandler = (e) => {
+    const { filterMinDate } = this.state;
     this.setState({
-      filterMaxDate: e.target.value
+      filterMaxDate: e.target.value,
+      filterMinDate: e.target.value < filterMinDate ? e.target.value : filterMinDate
     });
   }
 
@@ -117,7 +121,7 @@ class FilterForm extends Component {
           <Col>
             <Row>
               <Col>
-                <Form inline>
+                <Form inline onSubmit={(e) => e.preventDefault() }>
                   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                   <CustomInput type="checkbox" id="exampleCustomCheckbox"
                     label="Search by ID" onChange={this.searchByID_OnChangeHandler} />
@@ -136,7 +140,7 @@ class FilterForm extends Component {
                   <FormGroup>
                     <Label for="selectUsers">Users</Label>
                     <Input type="select" name="selectUsers" id="selectUsers" multiple
-                      onChange={this.selectUsersOnChangeHandler} disabled={filterSearchById}>
+                      onChange={this.selectUsersOnChangeHandler} disabled={filterSearchById} bsSize="lg">
                       <option selected value={0}> -- All -- </option>
                     {
                       users.map((v, i) => {
@@ -158,7 +162,7 @@ class FilterForm extends Component {
               <Row>
                 <Col>
                   <FormGroup>
-                    <Label for="minDate" className="mr-sm-2">From</Label>
+                    <Label for="minDate" className="mr-sm-2">From </Label>
                     <Input type="date" name="date" id="minDate"
                       onChange={this.minDateOnChangeHandler} disabled={filterSearchById} />
                   </FormGroup>
@@ -166,7 +170,7 @@ class FilterForm extends Component {
                 <Col>
                   <FormGroup>
                     <Label for="maxDate" className="mr-sm-2">To</Label>
-                    <Input type="date" name="date" id="maxDate"
+                    <Input type="date" name="date" id="maxDate" value={filterMaxDate}
                       onChange={this.maxDateOnChangeHandler} disabled={filterSearchById} />
                   </FormGroup>
                 </Col>
