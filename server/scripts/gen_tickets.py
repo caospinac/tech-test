@@ -10,30 +10,30 @@ from user_queries import UserQueries
 class DummyTicket(object):
 
     def __init__(self):
-        self.requester_id = self._any('requester_id')
-        self.assignee_id = self._any('assignee_id')
-        self.status = self._any('status')
-        self.priority = self._any('priority')
-        self.subject = self._any('subject')
-        self.description = self._any('description')
-        self.type = self._any('type')
-        self.via = {'channel': self._any('via')}
-        self.tags = ' '.join(self._random_tags())
+        self.requester_id = self.__any('requester_id')
+        self.assignee_id = self.__any('assignee_id')
+        self.status = self.__any('status')
+        self.priority = self.__any('priority')
+        self.subject = self.__any('subject')
+        self.description = self.__any('description')
+        self.type = self.__any('type')
+        self.via = {'channel': self.__any('via')}
+        self.tags = ' '.join(self.__random_tags())
 
-    def _any(self, field):
+    def __any(self, field):
         try:
-            return random.choice(self._possible_values[field])
+            return random.choice(self.__possible_values[field])
         except IndexError as ie:
             return None
         
-    def _random_tags(self):
-        tags = self._possible_values['tags'].copy()
+    def __random_tags(self):
+        tags = self.__possible_values['tags'].copy()
         return [
             tags.pop(random.randrange(len(tags)))
             for i in range(random.randrange(len(tags)))
         ]
 
-    _possible_values = {
+    __possible_values = {
         'requester_id': [
             user['id'] for user in get_request('/api/v2/users.json')['users']
         ],

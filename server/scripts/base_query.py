@@ -6,6 +6,10 @@ try:
     from .creds import email, auth_token
 except ImportError as ie:
     from creds import email, auth_token
+except:
+    print('Credentials \'creds.py\' with \'email\' and \'auth_token\''
+          'variables must be created.')
+    exit(1)
 
 
 api_url_base = 'https://team3000.zendesk.com'
