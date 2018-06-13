@@ -1,10 +1,11 @@
 from sanic import Sanic
 from sanic.exceptions import NotFound, FileNotFound
-from sanic.response import json, redirect
 # from sanic_cors import CORS
 
+from feed_database import DataBaseEngine
 from operational import BaseView, Interaction, User
 
+db = DataBaseEngine()
 app = Sanic(__name__)
 
 
@@ -26,9 +27,28 @@ def cors_headers(request, response):
         response.headers.update(cors_headers)
     return response
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index(request):
-    return json({'hello': 'hello'})
+    return BaseView.response_status(200, {'hello': 'hello'})
+
+
+@app.route('/api/news', methods=['GET'])
+def news(request):
+    new_users = db.check_users()['new_count']
+    new_interactions = db.check_interactions()['new_count']
+
+    return BaseView.response_status(200, {
+        'users': new_users, 'interactions': new_interactions
+    })
+
+@app.route('/api/news/update', methods=['POST'])
+def news_update(request):
+    new_users = db.pull_users()['new_count']
+    new_interactions = db.pull_interactions()['new_count']
+
+    return BaseView.response_status(200, {
+        'users': new_users, 'interactions': new_interactions
+    })
 
 
 app.add_route(User.as_view(), '/api/users')

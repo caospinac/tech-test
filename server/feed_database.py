@@ -1,4 +1,5 @@
 import os
+import sys
 
 from pymongo import MongoClient
 
@@ -12,7 +13,7 @@ class DataBaseEngine(object):
         self.users = db.users
         self.interactions = db.interactions
     
-    def _pull(self, collection):
+    def _pull(self, collection, save=False):
         try:
             greater_local_date = collection.find(
                 {},{'created_at': 1, '_id': 0}
@@ -22,16 +23,26 @@ class DataBaseEngine(object):
         
         Queries = UserQueries if collection is self.users else TicketQueries
         records_found = Queries.request_all(f'created>{greater_local_date}')
+
+        if not save:
+            return { 'new_count': sum(1 for _ in records_found) }
+
         count = 0
         for new in records_found:
             collection.insert_one(new)
             count += 1
-        return { 'found_count': count }
+        return { 'new_count': count }
 
     def pull_users(self):
-        return self._pull(self.users)
+        return self._pull(self.users, True)
     
     def pull_interactions(self):
+        return self._pull(self.interactions, True)
+
+    def check_users(self):
+        return self._pull(self.users)
+    
+    def check_interactions(self):
         return self._pull(self.interactions)
 
     @property
