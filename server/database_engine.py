@@ -13,25 +13,47 @@ class DataBaseEngine(object):
         self.users = db.users
         self.interactions = db.interactions
     
-    def __pull(self, collection, save=False):
+    def __greater_local_date(self, collection, date_type):
+        if not date_type in ('created', 'updated'):
+            raise ValueError('The date type must be \'created\' or \'updated\'')
+
+        date_field = 'created_at' if date_type == 'created' else 'updated_at'
         try:
-            greater_local_date = collection.find(
-                {},{'created_at': 1, '_id': 0}
-            ).sort('created_at', -1).limit(1)[0]['created_at']
+            return collection.find(
+                {},{date_field: 1, '_id': 0}
+            ).sort(date_field, -1).limit(1)[0][date_field]
         except IndexError as ie:
-            greater_local_date = '1-1-1'
+            return '1-1-1'
+    
+    def __pull(self, collection, save=False):
         
         Queries = UserQueries if collection is self.users else TicketQueries
-        records_found = Queries.request_all(f'created>{greater_local_date}')
+        new_gld = self.__greater_local_date(collection, 'created')
+        new_records_found = Queries.request_all(
+            f'created>{new_gld}'
+        )
+        updated_gld = self.__greater_local_date(collection, 'updated')
+        update_records_found = Queries.request_all(
+            f'updated>{updated_gld}'
+        )
 
         if not save:
-            return { 'new_count': sum(1 for _ in records_found) }
+            return {
+                'new_count': sum(1 for _ in new_records_found),
+                'update_count': sum(1 for _ in update_records_found)
+            }
 
-        count = 0
-        for new in records_found:
+        new_count = 0
+        for new in new_records_found:
             collection.insert_one(new)
-            count += 1
-        return { 'new_count': count }
+            new_count += 1
+
+        update_count = 0
+        for update in update_records_found:
+            collection.update_one({'_id': update['_id']}, {'$set': update})
+            update_count += 1
+        
+        return { 'new_count': new_count, 'update_count': update_count }
 
     def pull_users(self):
         return self.__pull(self.users, True)
