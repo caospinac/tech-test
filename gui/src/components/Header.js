@@ -55,26 +55,43 @@ class Header extends Component {
     this.updateData();
   }
 
-  modalBody = () => {
+  modalBody = (total) => {
     const { users, interactions } = this.state.newData;
-    if (!(users + interactions)) {
+    if (!total) {
       return <h1>Everything is up to date.</h1>
     }
     return (
       <ListGroup>
-        <ListGroupItem className="justify-content-between">
-          Users <Badge pill>{users}</Badge>
-        </ListGroupItem>
-        <ListGroupItem className="justify-content-between">
-          Interactions <Badge pill>{interactions}</Badge>
-        </ListGroupItem>
+        {
+          users.new_count > 0 &&
+          <ListGroupItem className="justify-content-between">
+            {users.new_count} new user{users.new_count > 1 ? "s": ""}
+          </ListGroupItem>
+        }
+        {
+          users.update_count > 0 &&
+          <ListGroupItem className="justify-content-between">
+            {users.update_count} updated user{users.update_count > 1 ? "s": ""}
+          </ListGroupItem>
+        }
+        {
+          interactions.new_count > 0 &&
+          <ListGroupItem className="justify-content-between">
+            {interactions.new_count} new user{interactions.new_count > 1 ? "s": ""}
+          </ListGroupItem>
+        }
+        {
+          interactions.update_count > 0 &&
+          <ListGroupItem className="justify-content-between">
+            {interactions.update_count} updated user{interactions.update_count > 1 ? "s": ""}
+          </ListGroupItem>
+        }
       </ListGroup>
     )
   }
 
-  modalFooter = () => {
-    const { users, interactions } = this.state.newData;
-    if (!(users + interactions)) {
+  modalFooter = (total) => {
+    if (!total) {
       return (
         <div>
           <Button color="info" onClick={this.modalToggle}>Accept</Button>
@@ -91,9 +108,7 @@ class Header extends Component {
     )
   }
 
-  updateBadge = () => {
-    const { users, interactions } = this.state.newData;
-    let val = users + interactions
+  updateBadge = (val) => {
     if (!val) {
       return <Badge color="secondary">{val}</Badge>
     }
@@ -101,6 +116,11 @@ class Header extends Component {
   }
 
   render() {
+    const { users, interactions } = this.state.newData;
+    const totalNews = (
+      users.new_count + users.update_count + interactions.new_count +
+      interactions.update_count
+    )
     return (
       <div>
         <Navbar color="light" light expand="md">
@@ -111,15 +131,15 @@ class Header extends Component {
               <Nav className="ml-auto" navbar>
                 <NavItem>
                   <NavLink href="#" onClick={this.modalToggle}>
-                    Updates {this.updateBadge()}
+                    Updates {this.updateBadge(totalNews)}
                   </NavLink>
                   <Modal isOpen={this.state.modal} toggle={this.modalToggle} className={this.props.className}>
                     <ModalHeader toggle={this.modalToggle}>Updates</ModalHeader>
                     <ModalBody>
-                    { this.modalBody() }
+                    { this.modalBody(totalNews) }
                     </ModalBody>
                     <ModalFooter>
-                    { this.modalFooter() }
+                    { this.modalFooter(totalNews) }
                     </ModalFooter>
                   </Modal>
                 </NavItem>

@@ -78,8 +78,8 @@ class DataBaseEngine(object):
 
 def main():
     db = DataBaseEngine()
-    print('Users:', db.pull_users())
-    print('Interactions', db.pull_interactions())
+    print('Users:', db.check_users())
+    print('Interactions', db.check_interactions())
 
 if __name__ == '__main__':
     main()

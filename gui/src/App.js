@@ -16,8 +16,8 @@ class App extends Component {
       users: [],
       interactions: [],
       newData: {
-        users: 0,
-        interactions: 0
+        users: { new_count: 0, update_count: 0 },
+        interactions: { new_count: 0, update_count: 0 }
       }
     }
   }
@@ -57,8 +57,8 @@ class App extends Component {
       this.getData();
       this.showMessage('Successful data update!', 'success')
       this.setState({newData: {
-        users: 0,
-        interactions: 0
+        users: { new_count: 0, update_count: 0 },
+        interactions: { new_count: 0, update_count: 0 }
       }})
     })
     .catch(err => {
@@ -73,28 +73,28 @@ class App extends Component {
     .set('Accept', 'application/json')
     .then(res => {
       users = res.body.data
-    })
-    .catch(err => {
-      console.log(err);
-    });
-    request.get('http://localhost:8000/api/interactions')
-    .set('Accept', 'application/json')
-    .then(res => {
-      interactions = []
-      // eslint-disable-next-line
-      res.body.data.map((x) => {
-        let user = users.find((item) => {
-          return item.integration_id === x.assignee_id
+      request.get('http://localhost:8000/api/interactions')
+      .set('Accept', 'application/json')
+      .then(res => {
+        interactions = []
+        // eslint-disable-next-line
+        res.body.data.map((x) => {
+          let user = users.find((item) => {
+            return item.integration_id === x.assignee_id
+          });
+          interactions.push(Object.assign({}, x, {
+            userFirstName: user.first_name,
+            userLastName: user.last_name,
+            userIntegrationId: user.integration_id,
+          }));
         });
-        interactions.push(Object.assign({}, x, {
-          userFirstName: user.first_name,
-          userLastName: user.last_name,
-          userIntegrationId: user.integration_id,
-        }));
-      });
-      this.setState({
-        users: users,
-        interactions: interactions,
+        this.setState({
+          users: users,
+          interactions: interactions,
+        });
+      })
+      .catch(err => {
+        console.log(err);
       });
     })
     .catch(err => {
@@ -106,6 +106,10 @@ class App extends Component {
     this.setState({ message: false });
   }
 
+  componentWillMount = () => {
+    
+  }
+
   componentDidMount = () => {
     this.checkUpdates()
     try {
@@ -113,7 +117,7 @@ class App extends Component {
     } catch(e) {
       console.log(e);
     }
-    this.getData();    
+    this.getData();
   }
 
   render() {

@@ -34,8 +34,8 @@ def index(request):
 
 @app.route('/api/news', methods=['GET'])
 def news(request):
-    new_users = db.check_users()['new_count']
-    new_interactions = db.check_interactions()['new_count']
+    new_users = db.check_users()
+    new_interactions = db.check_interactions()
 
     return BaseView.response_status(200, {
         'users': new_users, 'interactions': new_interactions
@@ -43,8 +43,8 @@ def news(request):
 
 @app.route('/api/news/update', methods=['POST'])
 def news_update(request):
-    new_users = db.pull_users()['new_count']
-    new_interactions = db.pull_interactions()['new_count']
+    new_users = db.pull_users()
+    new_interactions = db.pull_interactions()
 
     return BaseView.response_status(200, {
         'users': new_users, 'interactions': new_interactions
