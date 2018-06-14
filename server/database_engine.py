@@ -91,8 +91,8 @@ class DataBaseEngine(object):
         )
 
         updated_gld: str = self.__greater_local_date(collection, 'updated')
-        update_records_found: generator = Queries.request_all(
-            f'updated>{updated_gld}'
+        update_records_found = Queries.request_all(
+            f'updated>{updated_gld}%20created<={new_gld}'
         )
 
         if not save:
