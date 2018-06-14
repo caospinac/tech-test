@@ -2,9 +2,14 @@
 import random
 
 # own modules
-from base_query import get_request
-from ticket_queries import TicketQueries
-from user_queries import UserQueries
+try:
+    from base_query import get_request
+    from ticket_queries import TicketQueries
+    from user_queries import UserQueries
+except ModuleNotFoundError as mnfe:
+    from .base_query import get_request
+    from .ticket_queries import TicketQueries
+    from .user_queries import UserQueries
 
 
 class DummyTicket(object):
