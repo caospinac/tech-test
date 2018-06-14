@@ -44,6 +44,8 @@ class UserQueries(object):
 
     @staticmethod
     def register(new):
+        print("payload:")
+        print(new)
         payload = json.dumps({'user': new})
         return post_request('/api/v2/users.json', payload)
 

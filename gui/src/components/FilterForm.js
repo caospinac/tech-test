@@ -139,7 +139,7 @@ class FilterForm extends Component {
                 <Form>
                   <FormGroup>
                     <Label for="selectUsers">Users</Label>
-                    <Input type="select" name="selectUsers" id="selectUsers" multiple
+                    <Input type="select" name="selectUsers" id="selectUsers" multiple 
                       onChange={this.selectUsersOnChangeHandler} disabled={filterSearchById} bsSize="lg">
                       <option selected value={0}> -- All -- </option>
                     {

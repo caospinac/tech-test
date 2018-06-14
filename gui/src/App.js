@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import request from 'superagent';
 import { Alert, Container } from 'reactstrap';
 
@@ -12,7 +11,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      message: false,
+      message: { body: "", open: false, color: "" },
       users: [],
       interactions: [],
       newData: {
@@ -36,24 +35,17 @@ class App extends Component {
   }
 
   showMessage = (body, color) => {
-    let el = document.getElementById('message');
-    ReactDOM.render(
-      <Container><Alert color={color} toggle={() => {
-        while (el.firstChild) {
-          el.removeChild(el.firstChild);
-        }      
-      }}>
-      {body}
-    </Alert></Container>,
-    el
-    );
+    this.setState({
+      message: {
+        body: body, open: true, color: color
+      }
+    })
   }
 
   updateData = () => {
     request.post('http://localhost:8000/api/news/update')
     .set('Accept', 'application/json')
     .then(() => {
-      console.log('updating(?)')
       this.getData();
       this.showMessage('Successful data update!', 'success')
       this.setState({newData: {
@@ -103,11 +95,9 @@ class App extends Component {
   }
 
   messageOnDismiss = () => {
-    this.setState({ message: false });
-  }
-
-  componentWillMount = () => {
-    
+    this.setState({
+      message: { body: this.state.message.body, open: false }
+    });
   }
 
   componentDidMount = () => {
@@ -121,11 +111,15 @@ class App extends Component {
   }
 
   render() {
-    const { users, interactions, newData } = this.state;
+    const { users, interactions, newData, message } = this.state;
     return (
       <div>
-        <Header newData={newData} updateData={this.updateData} />
-        <div id="message"></div>
+        <Header newData={newData} updateData={this.updateData}
+         showMessage={this.showMessage} />
+        <Container><Alert isOpen={message.open} color={message.color}
+        toggle={this.messageOnDismiss}>
+          {message.body}
+        </Alert></Container>
         <FilterForm users={users} interactions={interactions}
           />
       </div>

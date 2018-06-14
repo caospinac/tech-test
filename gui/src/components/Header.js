@@ -18,13 +18,17 @@ import {
   NavLink
 } from 'reactstrap';
 
+import FormUser from './FormUser'
+
 class Header extends Component {
   constructor(props) {
     super(props);
+    this.showMessage = props.showMessage;
     this.updateData = props.updateData;
     this.state = {
       isOpen: false,
       modal: false,
+      sendUserModal: false,
       newData: props.newData
     };
   }
@@ -45,6 +49,23 @@ class Header extends Component {
   modalToggle = () => {
     this.setState({
       modal: !this.state.modal
+    });
+  }
+
+  successRegistration = (success) => {
+    if (success){
+      this.showMessage('Successful user registration!', 'success')
+    } else {
+      this.showMessage('An error occurred while trying to send the user  :S', 'danger')
+    }
+    this.setState({
+      sendUserModal: false
+    });
+  }
+  
+  sendUserModalToggle = () => {
+    this.setState({
+      sendUserModal: !this.state.sendUserModal
     });
   }
 
@@ -129,6 +150,16 @@ class Header extends Component {
             <NavbarToggler onClick={this.responsiveToggle} />
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
+                <NavItem>
+                  <NavLink href="#" onClick={this.sendUserModalToggle}>
+                    New user
+                  </NavLink>
+                  <Modal isOpen={this.state.sendUserModal} toggle={this.sendUserModalToggle}
+                  className={this.props.className}>
+                    <FormUser sendUserModalToggle={this.sendUserModalToggle}
+                      successRegistration={this.successRegistration} />
+                  </Modal>
+                </NavItem>
                 <NavItem>
                   <NavLink href="#" onClick={this.modalToggle}>
                     Updates {this.updateBadge(totalNews)}
