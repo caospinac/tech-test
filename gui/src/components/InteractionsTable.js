@@ -97,6 +97,7 @@ class InteractionsTable extends Component {
       <Table striped responsive>
         <thead>
           <tr>
+            <th>#</th>
             <th>Date</th>
             <th>Interaction ID</th>
             <th>Status</th>
@@ -111,6 +112,7 @@ class InteractionsTable extends Component {
             view.map((x, i) => {
               return (
                 <tr key={i}>
+                  <td>{i + 1}</td>
                   <td>{x.created_at}</td>
                   <td>{x._id}</td>
                   <td>{x.status}</td>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Container, Form, FormGroup, Label, Input, Row, Col, CustomInput
+  Button, Container, Form, FormGroup, Label, Input, Row, Col, CustomInput
 } from 'reactstrap';
 
 import InteractionsTable from './InteractionsTable';
@@ -14,13 +14,13 @@ class FilterForm extends Component {
       users: props.users,
       interactions: props.interactions,
       filterSearchById: false,
-      filterInteractionId: null,
-      filterSelectUsers: null,
+      filterInteractionId: '',
+      filterSelectUsers: 0,
       filterMinDate: '',
       filterMaxDate: '',
-      filterStatus: null,
-      filterPriority: null,
-      filterType: null
+      filterStatus: 0,
+      filterPriority: 0,
+      filterType: 0
     }
     this.values = {
       status: ['new', 'open', 'pending', 'hold', 'solved', 'closed'],
@@ -38,6 +38,19 @@ class FilterForm extends Component {
       users: newProps.users,
       interactions: newProps.interactions,
     });
+  }
+
+  resetFilters = () => {
+    this.setState({
+      filterSearchById: false,
+      filterInteractionId: '',
+      filterSelectUsers: 0,
+      filterMinDate: '',
+      filterMaxDate: '',
+      filterStatus: 0,
+      filterPriority: 0,
+      filterType: 0
+    })
   }
 
   searchByID_OnChangeHandler = (e) => {
@@ -76,19 +89,19 @@ class FilterForm extends Component {
 
   selectStatusOnChangeHandler = (e) => {
     this.setState({
-      filterStatus: Number(e.target.value) + 1 ? null : e.target.value
+      filterStatus: Number(e.target.value) + 1 ? 0 : e.target.value
     });
   }
 
   selectPriorityOnChangeHandler = (e) => {
     this.setState({
-      filterPriority: Number(e.target.value) + 1 ? null : e.target.value
+      filterPriority: Number(e.target.value) + 1 ? 0 : e.target.value
     });
   }
 
   selectTypeOnChangeHandler = (e) => {
     this.setState({
-      filterType: Number(e.target.value) + 1 ? null : e.target.value
+      filterType: Number(e.target.value) + 1 ? 0 : e.target.value
     });
   }
 
@@ -123,11 +136,11 @@ class FilterForm extends Component {
               <Col>
                 <Form inline onSubmit={(e) => e.preventDefault() }>
                   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                  <CustomInput type="checkbox" id="exampleCustomCheckbox"
+                  <CustomInput type="checkbox" id="exampleCustomCheckbox" checked={filterSearchById}
                     label="Search by ID" onChange={this.searchByID_OnChangeHandler} />
                   </FormGroup>
                   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                    <Input type="text" name="interactionID" id="interactionID"
+                    <Input type="text" name="interactionID" id="interactionID" value={filterInteractionId}
                     placeholder="Interaction ID" onChange={this.interactionID_OnChangeHandler}
                     autoComplete="off" disabled={!filterSearchById} />
                   </FormGroup>
@@ -139,7 +152,7 @@ class FilterForm extends Component {
                 <Form>
                   <FormGroup>
                     <Label for="selectUsers">Users</Label>
-                    <Input type="select" name="selectUsers" id="selectUsers" multiple 
+                    <Input type="select" name="selectUsers" id="selectUsers" multiple value={[filterSelectUsers]}
                       onChange={this.selectUsersOnChangeHandler} disabled={filterSearchById} bsSize="lg">
                       <option selected value={0}> -- All -- </option>
                     {
@@ -163,7 +176,7 @@ class FilterForm extends Component {
                 <Col>
                   <FormGroup>
                     <Label for="minDate" className="mr-sm-2">From </Label>
-                    <Input type="date" name="date" id="minDate"
+                    <Input type="date" name="date" id="minDate" value={filterMinDate}
                       onChange={this.minDateOnChangeHandler} disabled={filterSearchById} />
                   </FormGroup>
                 </Col>
@@ -179,7 +192,7 @@ class FilterForm extends Component {
                 <Col>
                 <FormGroup>
                   <Label for="idStatus">Status</Label>
-                  <Input type="select" name="status" id="idStatus"
+                  <Input type="select" name="status" id="idStatus" value={filterStatus}
                     onChange={this.selectStatusOnChangeHandler} disabled={filterSearchById}>
                   <option selected value={0}> -- All -- </option>
                   {
@@ -195,7 +208,7 @@ class FilterForm extends Component {
                 <Col>
                 <FormGroup>
                   <Label for="idPriority">Priority</Label>
-                  <Input type="select" name="priority" id="idPriority"
+                  <Input type="select" name="priority" id="idPriority" value={filterPriority}
                     onChange={this.selectPriorityOnChangeHandler} disabled={filterSearchById}>
                   <option selected value={0}> -- All -- </option>
                   {
@@ -211,7 +224,7 @@ class FilterForm extends Component {
                 <Col>
                 <FormGroup>
                   <Label for="idType">Type</Label>
-                  <Input type="select" name="type" id="idType"
+                  <Input type="select" name="type" id="idType" value={filterType}
                     onChange={this.selectTypeOnChangeHandler} disabled={filterSearchById}>
                   <option selected value={0}> -- All -- </option>
                   {
@@ -226,6 +239,7 @@ class FilterForm extends Component {
                 </Col>
               </Row>
             </Form>
+            <Button color="link" onClick={this.resetFilters} >Reset filters</Button>
           </Col>
         </Row>
         <InteractionsTable

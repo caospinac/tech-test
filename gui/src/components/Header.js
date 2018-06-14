@@ -98,13 +98,13 @@ class Header extends Component {
         {
           interactions.new_count > 0 &&
           <ListGroupItem className="justify-content-between">
-            {interactions.new_count} new user{interactions.new_count > 1 ? "s": ""}
+            {interactions.new_count} new interactions{interactions.new_count > 1 ? "s": ""}
           </ListGroupItem>
         }
         {
           interactions.update_count > 0 &&
           <ListGroupItem className="justify-content-between">
-            {interactions.update_count} updated user{interactions.update_count > 1 ? "s": ""}
+            {interactions.update_count} updated interaction{interactions.update_count > 1 ? "s": ""}
           </ListGroupItem>
         }
       </ListGroup>
