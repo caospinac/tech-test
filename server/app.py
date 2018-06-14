@@ -1,6 +1,6 @@
 from sanic import Sanic
 from sanic.exceptions import NotFound, FileNotFound
-from sanic_cors import CORS
+# from sanic_cors import CORS
 
 from database_engine import DataBaseEngine
 from operational import BaseView, Interaction, User
@@ -20,7 +20,7 @@ def cors_headers(request, response):
     cors_headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Accept, Content-Type',
-        'Access-Control-Allow-Methods': '*'
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
     }
     if response.headers is None or isinstance(response.headers, list):
         response.headers = cors_headers
@@ -28,12 +28,12 @@ def cors_headers(request, response):
         response.headers.update(cors_headers)
     return response
 
-@app.route("/", methods=['GET', 'OPTIONS'])
+@app.route("/", methods=['GET'])
 def index(request):
     return BaseView.response_status(200, {'hello': 'hello'})
 
 
-@app.route('/api/news', methods=['GET', 'OPTIONS'])
+@app.route('/api/news', methods=['GET'])
 def news(request):
     new_users = db.check_users()
     new_interactions = db.check_interactions()
@@ -44,6 +44,8 @@ def news(request):
 
 @app.route('/api/news/update', methods=['POST', 'OPTIONS'])
 def news_update(request):
+    if request.method == 'OPTIONS':
+        return BaseView.response_status(200, {})
     new_users = db.pull_users()
     new_interactions = db.pull_interactions()
 
@@ -52,10 +54,11 @@ def news_update(request):
     })
 
 @app.route('/api/send_user', methods=['POST', 'OPTIONS'])
-def news_update(request):
+def send_user(request):
+    if request.method == 'OPTIONS':
+        return BaseView.response_status(200, {})
     data = request.json
-    print("data", data)
-    return None # BaseView.response_status(UserQueries.register(data))
+    return BaseView.response_status(UserQueries.register(data))
 
 
 
@@ -67,7 +70,6 @@ app.add_route(Interaction.as_view(), '/api/interaction/<id:int>')
 
 
 if __name__ == '__main__':
-    CORS(app)
     app.run(
         debug=True,
         host='0.0.0.0',
