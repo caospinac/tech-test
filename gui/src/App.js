@@ -67,18 +67,20 @@ class App extends Component {
       users = res.body.data
       request.get('http://localhost:8000/api/interactions')
       .set('Accept', 'application/json')
-      .then(res => {
+      .then(res0 => {
         interactions = []
         // eslint-disable-next-line
-        res.body.data.map((x) => {
+        res0.body.data.map((x) => {
           let user = users.find((item) => {
             return item.integration_id === x.assignee_id
           });
-          interactions.push(Object.assign({}, x, {
-            userFirstName: user.first_name,
-            userLastName: user.last_name,
-            userIntegrationId: user.integration_id,
-          }));
+          if (user) {
+            interactions.push(Object.assign({}, x, {
+              userFirstName: user.first_name,
+              userLastName: user.last_name,
+              userIntegrationId: user.integration_id,
+            }));
+          }
         });
         this.setState({
           users: users,
@@ -86,10 +88,12 @@ class App extends Component {
         });
       })
       .catch(err => {
+        console.log("interactions");
         console.log(err);
       });
     })
     .catch(err => {
+      console.log('user');
       console.log(err);
     });
   }
