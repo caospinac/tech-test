@@ -88,12 +88,12 @@ class App extends Component {
         });
       })
       .catch(err => {
-        console.log("interactions");
+        this.showMessage('Unable to obtain interactions', 'danger')
         console.log(err);
       });
     })
     .catch(err => {
-      console.log('user');
+      this.showMessage('Unable to obtain users', 'danger')
       console.log(err);
     });
   }
