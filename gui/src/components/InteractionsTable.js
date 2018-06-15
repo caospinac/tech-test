@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, Table } from 'reactstrap';
+import { Alert, Table, Row, Container } from 'reactstrap';
+
+import PageControl from './PageControl'
 
 class InteractionsTable extends Component {
   constructor(props){
@@ -7,7 +9,9 @@ class InteractionsTable extends Component {
     this.state = {
       data: props.interactions,
       filters: props.filters,
-      view: props.interactions
+      view: props.interactions,
+      perPage: 10,
+      currentPage: 1
     }
   }
 
@@ -84,8 +88,20 @@ class InteractionsTable extends Component {
     })
   }
 
+  changePage = (page) => {
+    this.setState({
+      currentPage: page
+    })
+  }
+
+  onPerPageChange = (e) => {
+    this.setState({
+      perPage: e.target.value
+    })
+  }
+
   render() {
-    const { view } = this.state;
+    const { view, perPage, currentPage } = this.state;
     if (!view.length) {
       return (
         <Alert color="info">
@@ -94,6 +110,10 @@ class InteractionsTable extends Component {
       )
     }
     return (
+      <Container>
+        <PageControl changePage={this.changePage} rowCount={view.length}
+          perPage={perPage} currentPage={currentPage} onPerPageChange={this.onPerPageChange} />
+      <Row>
       <Table striped responsive>
         <thead>
           <tr>
@@ -109,10 +129,10 @@ class InteractionsTable extends Component {
         </thead>
         <tbody>
           {
-            view.map((x, i) => {
+            view.slice(perPage * (currentPage - 1), perPage * currentPage).map((x, i) => {
               return (
                 <tr key={i}>
-                  <td>{i + 1}</td>
+                  <td>{i + 1 + perPage * (currentPage - 1)}</td>
                   <td>{x.created_at}</td>
                   <td>{x._id}</td>
                   <td>{x.status}</td>
@@ -126,6 +146,8 @@ class InteractionsTable extends Component {
           }
         </tbody>
       </Table>
+      </Row>
+      </Container>
     );
   }
 }
