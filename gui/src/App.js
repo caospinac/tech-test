@@ -107,7 +107,7 @@ class App extends Component {
   componentDidMount = () => {
     this.checkUpdates()
     try {
-      // setInterval(this.checkUpdates, 60000);
+      setInterval(this.checkUpdates, 10000);
     } catch(e) {
       console.log(e);
     }
