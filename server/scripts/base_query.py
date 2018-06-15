@@ -3,16 +3,16 @@ import json
 import requests as req
 
 try:
-    from .creds import email, auth_token
+    from .creds import email, auth_token, domain
 except ImportError as ie:
-    from creds import email, auth_token
+    from creds import email, auth_token, domain
 except:
     print('Credentials \'creds.py\' with \'email\' and \'auth_token\''
           'variables must be created.')
     exit(1)
 
 
-api_url_base = 'https://team3000.zendesk.com'
+api_url_base = domain
 
 headers = {'Content-Type': 'application/json'}
 auth = (f'{email}/token', auth_token)
