@@ -105,7 +105,8 @@ You will see something like...
 [2018-06-15 13:39:14 -0500] [10249] [INFO] Starting worker [10249]
 ```
 
-### 3.1. Backend terminal (in the second terminal instance)
+### 3.1. GUI terminal (in the second terminal instance)
+#### Running GUI (client service)
 ```
 $ cd gui/
 $ yarn start
