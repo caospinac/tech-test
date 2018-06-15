@@ -6,7 +6,7 @@ from user_queries import UserQueries
 def main():
     user = {
         "name": "Carlos Andrés Ospina",
-        "email": "luis@company.org",
+        "email": "carlos@company.org",
         "role": "admin"
     }
     UserQueries.register(user)
