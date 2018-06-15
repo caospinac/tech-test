@@ -4,7 +4,7 @@ from sanic.exceptions import NotFound, FileNotFound
 
 from database_engine import DataBaseEngine
 from operational import BaseView, Interaction, User
-from scripts import UserQueries
+from scripts import UserQueries, DummyTicket, TicketQueries
 
 db = DataBaseEngine()
 app = Sanic(__name__)
@@ -53,6 +53,7 @@ def news_update(request):
         'users': new_users, 'interactions': new_interactions
     })
 
+
 @app.route('/api/send_user', methods=['POST', 'OPTIONS'])
 def send_user(request):
     if request.method == 'OPTIONS':
@@ -60,6 +61,17 @@ def send_user(request):
     data = request.json
     return BaseView.response_status(UserQueries.register(data))
 
+
+@app.route('/api/gen_tickets/<to_create>', methods=['GET', 'OPTIONS'])
+def gen_tickets(request, to_create):
+    if request.method == 'OPTIONS':
+        return BaseView.response_status(200, {})
+    to_create = 5
+    for i in range(to_create):
+        print(f'Record {i + 1} of {to_create}')
+        TicketQueries.register(vars(DummyTicket()))
+    print('Done.')
+    return BaseView.response_status(201)
 
 
 app.add_route(User.as_view(), '/api/users')
