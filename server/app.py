@@ -66,8 +66,8 @@ def send_user(request):
 def gen_tickets(request, to_create):
     if request.method == 'OPTIONS':
         return BaseView.response_status(200, {})
-    to_create = 5
-    for i in range(to_create):
+    # to_create = 5
+    for i in range(int(to_create)):
         print(f'Record {i + 1} of {to_create}')
         TicketQueries.register(vars(DummyTicket()))
     print('Done.')
