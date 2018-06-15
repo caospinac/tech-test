@@ -54,9 +54,9 @@ class Header extends Component {
 
   successRegistration = (success) => {
     if (success){
-      this.showMessage('Successful user registration!', 'success')
+      this.showMessage('Successful user registration! Watch for updates', 'success')
     } else {
-      this.showMessage('An error occurred while trying to send the user  :S', 'danger')
+      this.showMessage('An error occurred while trying to send the user :S', 'danger')
     }
     this.setState({
       sendUserModal: false
