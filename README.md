@@ -66,7 +66,7 @@ $ echo "domain = '<YOUR_DOMAIN>'
 > email = '<YOUR_EMAIL>'
 > api_token = '<YOUR_API_TOKEN>'" > server/scripts/creds.py
 ```
-Replacing <YOUR_DOMAIN>, <YOUR_EMAIL> and <YOUR_API_TOKEN> by the corresponding data, e.g.,
+Replacing `<YOUR_DOMAIN>`, `<YOUR_EMAIL>` and `<YOUR_API_TOKEN>` by the corresponding data, e.g.,
 ```
 $ echo "domain = 'https://yoursubdomain.zendesk.com'
 > email = 'youremail@examp.le'
