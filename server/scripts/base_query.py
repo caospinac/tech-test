@@ -28,6 +28,4 @@ def get_request(endpoint):
 def post_request(endpoint, payload):
     url = f'{ api_url_base }{ endpoint }'
     response = req.post(url, data=payload, auth=auth, headers=headers)
-    if response.status_code == 201:
-        return json.loads(response.content.decode('utf-8'))
     return response.status_code
