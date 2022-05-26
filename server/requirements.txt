@@ -6,7 +6,7 @@ idna==2.6
 pymongo==3.6.1
 requests==2.18.4
 sanic==0.7.0
-ujson==1.35
+ujson==5.2.0
 urllib3==1.22
 uvloop==0.10.1
 websockets==5.0.1
